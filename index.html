@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head lang="de">
+	<meta charset="UTF-8">
+	<title>Tax Calculator &middot; MOSS compatible</title>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+	<!--
+	<script src="js/RuleSet.js"></script>
+	<script src="js/Calculator.js"></script>
+	<script src="js/Rule.js"></script>
+	<script src="js/Price.js"></script>
+	<script src="js/vat-calculator.js"></script>
+	-->
+	<script src="dist/vat-calculator-1.0.0.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Steuerrechner für MOSS-Regelung ab 01.01.2015</h1>
+			<p class="page-head">Reverse-Charge Verfahren für Unternehmen mit Sitz innerhalb der EU, und außerhalb der EU.</p>
+
+			<form>
+
+				<div class="row">
+					<div class="col-md-4">
+						<fieldset>
+							<legend>Anbieter / Verkäufer</legend>
+
+							<div class="form-group">
+								<label for="price">Nettopreis</label>
+								<div class="input-group">
+									<input type="text" class="form-control" value="10.00" id="price" />
+									<span class="input-group-addon">&euro;</span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label>Anbieterland</label>
+								<p class="form-control-static">Deutschland</p>
+								<span class="help-block">kann geändert werden im Javascript</span>
+							</div>
+						</fieldset>
+					</div>
+					<div class="col-md-8">
+						<fieldset>
+							<legend>Käufer / Kunde</legend>
+
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="country">Käufer kommt aus folgendem Land</label>
+										<select id="country" class="form-control">
+											<optgroup label="EU">
+												<option value="BE">Belgien</option>
+												<option value="BG">Bulgarien</option>
+												<option value="DK">Dänemark</option>
+												<option value="DE" selected="selected">Deutschland</option>
+												<option value="EE">Estland</option>
+												<option value="FI">Finnland</option>
+												<option value="FR">Frankreich</option>
+												<option value="EL">Griechenland</option>
+												<option value="IE">Irland</option>
+												<option value="IT">Italien</option>
+												<option value="HR">Kroatien</option>
+												<option value="LV">Lettland</option>
+												<option value="LT">Litauen</option>
+												<option value="LU">Luxemburg</option>
+												<option value="MT">Malta</option>
+												<option value="NL">Niederlande</option>
+												<option value="AT">Österreich</option>
+												<option value="PL">Polen</option>
+												<option value="PT">Portugal</option>
+												<option value="RO">Rumänien</option>
+												<option value="SE">Schweden</option>
+												<option value="SK">Slowakei</option>
+												<option value="SI">Slowenien</option>
+												<option value="ES">Spanien</option>
+												<option value="CZ">Tschechische Republik</option>
+												<option value="HU">Ungarn</option>
+												<option value="GB">Vereinigtes Königreich</option>
+												<option value="CY">Zypern (nur griechischer Teil; inkl. Akrotiri und Dhekalia)</option>
+											</optgroup>
+											<optgroup label="Außerhalb EU-Umsatzsteuer-Bereich">
+												<option value="">Nicht-EU Land</option>
+											</optgroup>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="checkbox">
+										<label><input type="checkbox" id="company"> Kunde ist ein Unternehmen</label>
+										<span class="help-block">am besten per USt-IdNr. prüfen</span>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+
+				<fieldset>
+					<legend>Endpreis</legend>
+					<div class="form-group">
+						<label>Endpreis für den Käufer</label>
+						<p class="lead well well-sm">
+							<span id="net"></span> &euro; netto<br />
+							+ <span id="taxrate-value"></span> &euro; MwSt. (<span id="taxrate"></span>%)<br />
+							<span id="sum"></span> &euro; brutto
+
+						</p>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+	<footer>
+		<div class="row">
+			<div class="col-md-12">&copy; 2014 Robert Kummer</div>
+		</div>
+	</footer>
+</div>
+
+
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+	var country = null, company = false;
+
+	function calculateSum() {
+		if (country === null)
+			return;
+
+		var price = calculator.calculate(country, company);
+
+		$('#sum').text(price.getValue().toFixed(2));
+		$('#net').text(price.getNetValue().toFixed(2));
+		$('#taxrate-value').text(price.getTax().toFixed(2));
+		$('#taxrate').text(price.getTaxRate().toFixed(2) * 100);
+	}
+
+	$(document).ready(function () {
+		$('#price').change(function () {
+			var $this = $(this);
+			var value = parseFloat($this.val());
+			calculator.setPrice(value);
+			$this.val(value.toFixed(2));
+			calculateSum();
+		}).trigger('change');
+
+		$('#country').change(function () {
+			var $this = $(this);
+			country = $this.val();
+
+			calculateSum();
+		}).trigger('change');
+
+		$('#company').change(function () {
+			var $this = $(this);
+			company = $this.prop('checked');
+
+			calculateSum();
+		}).trigger('change');
+	});
+</script>
+</body>
+</html>
