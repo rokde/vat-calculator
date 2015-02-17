@@ -8,7 +8,7 @@ Clone the repository and open index.html in your browser.
 Usage
 -----
 
-```<script src="dist/vat-calculator-1.0.0.min.js"></script>```
+```<script src="dist/vat-calculator-1.0.1.min.js"></script>```
 
 
 	var country = "AT", company = false;
