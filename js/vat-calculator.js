@@ -47,6 +47,8 @@
   rules.addRule(new Rule("MT", .18));
 
   rules.addRule(new Rule("NL", .21));
+  
+  rules.addRule(new Rule("NO", .25));
 
   rules.addRule(new Rule("PL", .23));
 
