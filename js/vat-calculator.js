@@ -9,6 +9,8 @@
   rules.addRule(new Rule("BE", .21));
 
   rules.addRule(new Rule("BG", .20));
+  
+  rules.addRule(new Rule("CH", .8));
 
   rules.addRule(new Rule("CY", .19));
 
